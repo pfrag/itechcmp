@@ -1,6 +1,7 @@
 import json
 import sys
 
+# TODO: monthlygwopex, nbiot flat rate rebooking (probably not necessary if it's per device), different cost of SBC if it's a gw vs. if it's plain compute)
 """
 Gateway and monitor deployment models (this applies to lora deployments)
 
@@ -72,9 +73,10 @@ def monthly_network_cost(settings, modelname):
     if not model["network"]["managedstack"]["openended"]:
       # may need to buy more. find how many "expensive" data plans we need. the remaining devices will be served by one of 
       # the cheaper options. if num_devices < max number of devs covered by highest data plan, no need to buy more.
-      num_max_subscriptions = num_devices/D[len(D)-1] # could be 0
+      num_max_subscriptions = int(num_devices/D[len(D)-1]) # could be 0
       remaining_devs = num_devices % D[len(D)-1] # could be == num_devices
-    
+      #print("not open ended: ", num_max_subscriptions, remaining_devs)
+
     data_plan = -1
     # see how to cover the rest of the devices
     # if !openended, remaining_devs is always < than the max plan, so at some point the loop will break
@@ -82,13 +84,14 @@ def monthly_network_cost(settings, modelname):
     # the number of devices, but since it's an open-ended model, the most expensive data plan offers unlimited dev coverage. 
     # the monthly fee is thus the price of the most expensive data plan.
     for i in range(0, len(D)):
-      if remaining_devs/D[i] == 0:
+      if int(remaining_devs/D[i]) == 0:
         data_plan = i
         break
     if data_plan == -1:
       extra_monthly_fee = C[len(C) - 1]
     else:
       extra_monthly_fee = C[data_plan]
+    #print("extra fee: ", extra_monthly_fee)
     subscription_cost = num_max_subscriptions*C[len(D) - 1] + extra_monthly_fee
   else:
     # - Calculate base subscription cost: each device pays a monthly cost. Excess costs are computed after the aggregate cap is exceeded. 
@@ -225,11 +228,7 @@ def get_setup_cost(settings, model):
 def get_monthly_cost(settings, model):
   return monthly_network_cost(settings, model) + compute_cost(settings, model)[1]
 
-if __name__ == "__main__":
-  # load settings
-  with open(sys.argv[1]) as f:
-    settings = json.load(f)
-
+def compare_all(settings):
   # calculate setup costs for each model
   aggregate_cost = {}
   for model in settings["models"].keys():
@@ -250,3 +249,31 @@ if __name__ == "__main__":
       aggregate_cost[model] += get_monthly_cost(settings, model)
     print()
   print()
+
+def daily_cost_vs_devices(settings, month, nregions):
+  """Calculate amortized daily cost over the first year for increasing numbers of devices.
+  """
+
+  # print labels
+  print("devices", end="\t")
+  for model in settings["models"].keys():
+    print(model, end="\t")
+  print()
+
+  for n in range(100, 2001, 100):
+  #for n in range(9900, 10001, 100):
+    settings["topology"]["regions"] = nregions
+    settings["topology"]["devicesperregion"] = n/nregions
+    print(n, end="\t")
+    for model in settings["models"].keys():
+      cost = (get_setup_cost(settings, model) + month*get_monthly_cost(settings, model))/(month*30)
+      print(int(cost), end="\t")
+    print()
+    
+if __name__ == "__main__":
+  # load settings
+  with open(sys.argv[1]) as f:
+    settings = json.load(f)
+  daily_cost_vs_devices(settings, 36, 10)
+  #compare_all(settings)
+
