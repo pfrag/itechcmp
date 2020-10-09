@@ -3,7 +3,7 @@
     "LoRaWAN-aio": {
       "description": "LoRaWAN connectivity. Minimal dependence or cloud infrastructures. The gateway device, LoRaWAN stack and edge monitor are built into the same edge device. The aggregator monitor is deployed also on an edge device. The backhaul is controlled by the service owner and incurs no fees.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 200,
         "montlygwopex": 10
       },
@@ -27,7 +27,7 @@
     "LoRaWAN-split-gateway": {
       "description": "LoRaWAN connectivity. Minimal dependence or cloud infrastructures. The gateway device is lightweight, and the network stack is built into a separate edge device. Further edge devices are used for the monitor. The aggregator monitor is deployed also on an edge device. The backhaul is controlled by the service owner and incurs no fees.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 200,
         "montlygwopex": 10
       },
@@ -51,7 +51,7 @@
     "LoRaWAN-cloud-based": {
       "description": "LoRaWAN connectivity with a lightweight gateway. The LoRaWAN stack, edge monitors and aggregator monitor run on the cloud. 4G is used for the gateway backhaul.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 200,
         "montlygwopex": 10
       },
@@ -75,7 +75,7 @@
     "LoRaWAN-community-based": {
       "description": "LoRaWAN connectivity via community gateways. Free connectivity, cloud-based application deployment.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 0,
         "montlygwopex": 0
       },
@@ -99,7 +99,7 @@
     "LoRaWAN-managed-stack": {
       "description": "LoRaWAN connectivity via a network stack provided by an operator. The fee is a stepwise function of the number of devices (as e.g. by Loriot). If more than the maximum devices included in the plan are required, a new plan needs to be bought if openended is false. Otherwise, no need to buy additional subscriptions. The SP controls the gateways. Monitors are deployed in the cloud.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 200,
         "montlygwopex": 10
       },
@@ -107,9 +107,9 @@
         "basecost": 0,
         "datacap": 0,
         "extracostperbyte": 0,
-        "backhaulbasecost": 0,
-        "backhaulcostperbyte": 0,
-        "backhauldatacap": 0,
+        "backhaulbasecost": 5,
+        "backhaulcostperbyte": 0.00001,
+        "backhauldatacap": 2000000,
         "managedstack": {
           "devices": [250, 500, 1000, 2500],
           "monthlyfee": [100, 175, 250, 500, 700],
@@ -117,7 +117,7 @@
         }
       },
       "deployment": {
-        "gatewaydevice": null,
+        "gatewaydevice": "edge",
         "gatewaystack": null,
         "stackdevice": null,
         "edgemonitor": "dedicated",
@@ -128,7 +128,7 @@
     "LoRaWAN-MNO-cloud": {
       "description": "LoRaWAN connectivity via a network infrastructure provided by an operator. This includes both the gateways and the network stack. Therefore, there is no gateway associated cost nor any backhaul costs. There is a monthly fee per device. Monitors are deployed in the cloud.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 0,
         "montlygwopex": 0
       },
@@ -153,7 +153,7 @@
     "LoRaWAN-MNO-MEC": {
       "description": "LoRaWAN connectivity via a network infrastructure provided by an operator. This includes both the gateways and the network stack. Therefore, there is no gateway associated cost nor any backhaul costs. There is a monthly fee per device. Edge monitors are deployed in MEC servers, which is the only difference with the lora-mno-cloud model.",
       "infrastructure": {
-        "devicecost": 5,
+        "devicecost": 15,
         "gatewaycost": 0,
         "montlygwopex": 0
       },
@@ -176,9 +176,9 @@
       }
     },
     "NB-IoT-cloud-monthly": {
-      "description": "NB-IoT connectivity using a monthly fee. There is a small activation cost per device, and a monthly fee is paid per device which includes a fixed data cap of 500K per month shared across all devices. Excess charges follow. The edge and aggregator monitors are deployed in the (remote) cloud.",
+      "description": "NB-IoT connectivity using a monthly fee. There is a small activation cost per device (2.5), and a monthly fee is paid per device which includes a fixed data cap of 500K per month shared across all devices. Excess charges follow. The edge and aggregator monitors are deployed in the (remote) cloud.",
       "infrastructure": {
-        "devicecost": 10,
+        "devicecost": 27.5,
         "gatewaycost": 0,
         "montlygwopex": 0
       },
@@ -200,35 +200,10 @@
         "aggregatormonitor": "cloud"
       }
     },
-    "NB-IoT-cloud-flat": {
-      "description": "NB-IoT connectivity using a flat-rate data plan. A one-off cost is paid per device and there are no monthly fees. There is no data cap. The edge and aggregator monitors are deployed in the (remote) cloud.",
-      "infrastructure": {
-        "devicecost": 15,
-        "gatewaycost": 0,
-        "montlygwopex": 0
-      },
-      "network": {
-        "flatrate": true,
-        "basecost": 0,
-        "datacap": 500000,
-        "extracostperbyte": 0,
-        "backhaulbasecost": 0,
-        "backhaulcostperbyte": 0,
-        "backhauldatacap": 0
-      },
-      "deployment": {
-        "gatewaystack": null,
-        "gatewaydevice": null,
-        "stackdevice": null,
-        "edgemonitor": "dedicated",
-        "monitordevice": "cloud",
-        "aggregatormonitor": "cloud"
-      }
-    },
     "NB-IoT-MEC-monthly": {
       "description": "NB-IoT connectivity. The edge monitors are instantiated in MEC datacenters. The aggregator monitor is in the cloud",
       "infrastructure": {
-        "devicecost": 10,
+        "devicecost": 27.5,
         "gatewaycost": 0,
         "montlygwopex": 0
       },
@@ -250,10 +225,35 @@
         "aggregatormonitor": "cloud"
       }
     },
+    "NB-IoT-cloud-flat": {
+      "description": "NB-IoT connectivity using a flat-rate data plan. A one-off cost is paid per device and there are no monthly fees. There is no data cap. The edge and aggregator monitors are deployed in the (remote) cloud. Device cost includes hw cost+activation fee (27.5) and flat connectivity fee (10)",
+      "infrastructure": {
+        "devicecost": 37.5,
+        "gatewaycost": 0,
+        "montlygwopex": 0
+      },
+      "network": {
+        "flatrate": true,
+        "basecost": 0,
+        "datacap": 500000,
+        "extracostperbyte": 0,
+        "backhaulbasecost": 0,
+        "backhaulcostperbyte": 0,
+        "backhauldatacap": 0
+      },
+      "deployment": {
+        "gatewaystack": null,
+        "gatewaydevice": null,
+        "stackdevice": null,
+        "edgemonitor": "dedicated",
+        "monitordevice": "cloud",
+        "aggregatormonitor": "cloud"
+      }
+    },
     "NB-IoT-MEC-flat": {
       "description": "NB-IoT connectivity using a flat-rate data plan. A one-off cost is paid per device and there are no monthly fees. There is no data cap. The edge monitors are deployed at MEC DCs and  the aggregator monitors are deployed in the (remote) cloud.",
       "infrastructure": {
-        "devicecost": 15,
+        "devicecost": 37.5,
         "gatewaycost": 0,
         "montlygwopex": 0
       },
@@ -283,7 +283,7 @@
   },
   "application": {
     "name": "parking",
-    "messagefrequency": 0.01,
+    "messagefrequency": 0.000277778,
     "payloadsize": 20,
     "availability": 0.9999
   },
@@ -299,7 +299,7 @@
       "pfailsoft": 0.0001,
       "pfailhard": 0.0001,
       "repaircostperhour": 100,
-      "monthlyextraopex": 10
+      "monthlyextraopex": 5
     },
     "vcpu": {
       "throughput": 150,
@@ -317,10 +317,13 @@
   },
   "computecosts": {
     "cloud": {
-      "costpercpu": 180
+      "costperunit": 18
     },
     "mec": {
-      "costpercpu": 360
+      "costperunit": 36
+    },
+    "sbc": {
+      "costperunit": 50
     }
   }
 }
