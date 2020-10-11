@@ -297,7 +297,7 @@ def daily_cost_vs_devices(settings, month, nregions):
     print()
     
 if __name__ == "__main__":
-  if sys.argc != 4:
+  if len(sys.argv) != 3:
     print("Wrong number of arguments. Usage: python itechcmp.py /path/to/input/file -d/-a")
     sys.exit(1)
   else:
